@@ -23,7 +23,9 @@
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.3.5",
+    "uud": "^0.0.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
