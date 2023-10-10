@@ -1,0 +1,13 @@
+.CardList{
+    display: flex;
+    flex-wrap: wrap;
+    width: 80%;
+    justify-content: center;
+    min-height: 45vh;
+} 
+
+@media (max-width: 830px){
+    .CardList{
+        width: 90%;
+    }
+}

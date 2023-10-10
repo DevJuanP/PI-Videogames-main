@@ -7,7 +7,7 @@ const GET_allGenresHandler = async (req, res) => {
         const genres = await getGenresfromDB()//si está vacio carga la db con la api
         res.status(200).json(genres)
     } catch (error) {
-        res.status(200).json({error: error.message})
+        res.status(400).json({error: error.message})
     }
 }
 

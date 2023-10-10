@@ -1,0 +1,21 @@
+.Card{
+    height: 260px;
+    width: 300px;
+    border: 2px solid red;
+    margin: 10px;
+    background-color: black;
+}
+
+.img{
+    height: 170px;
+    width: 300px;
+    margin-bottom: 5px;
+}
+
+.genres{
+    color: rgb(121, 121, 121);
+}
+
+.fontlight{
+    color: rgb(255, 255, 255);
+}

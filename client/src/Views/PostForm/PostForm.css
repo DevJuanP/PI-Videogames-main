@@ -1,0 +1,11 @@
+.PostForm{
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    margin-top: 200px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}

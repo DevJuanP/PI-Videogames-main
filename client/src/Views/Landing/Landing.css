@@ -1,0 +1,19 @@
+.Landing{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background-image 1.5s ease-in-out;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.land{
+    -webkit-text-stroke: 3px rgb(20, 24, 48);
+    font-size: 80px;
+    font-weight: 900;
+}

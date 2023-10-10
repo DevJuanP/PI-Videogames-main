@@ -1,7 +1,7 @@
 const axios = require('axios')
 require('dotenv').config()
 const {API_KEY} = process.env
-const {Videogame, Genre} = require('../db')
+const {Videogame, Genre, Plataform} = require('../db')
 const description = require('../Utils/description')
 
 const getAllVG = async (n) => {
@@ -11,7 +11,10 @@ const getAllVG = async (n) => {
             {
                 model: Genre,
                 attributes: ['name']
-            }, //other models
+            }, {
+                model: Plataform,
+                attributes: ['name']
+            }
         ]
     })
 
@@ -21,7 +24,7 @@ const getAllVG = async (n) => {
             id: vg.id,
             name: vg.name,
             description: vg.description,
-            platforms: vg.platforms,
+            platforms: vg.plataforms.map( p => p.name),
             image: vg.image,
             released: vg.released,
             rating: vg.rating,

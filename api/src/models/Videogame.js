@@ -19,11 +19,11 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     }, 
-    platforms: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-      defaultValue: ['PC']
-    },
+    // platforms: {
+    //   type: DataTypes.ARRAY(DataTypes.STRING),
+    //   allowNull: false,
+    //   defaultValue: ['PC']
+    // },
     image: {
       type: DataTypes.STRING,
       allowNull: false,

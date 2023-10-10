@@ -1,0 +1,40 @@
+.home{
+    margin-top: 180px;
+    color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.image{
+    width: 100%;
+    height: auto;
+    
+}
+.buttons{
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.pag{
+    font-size: 20px;
+}
+
+.FilterOrder{
+    display: flex;
+    margin: 5px 0 20px;
+}
+
+.enLinea{
+    display: inline-block; 
+    margin-right: 10px;
+}
+
+.filter{
+    margin-right: 3vw;
+}
+
+.order{
+    display: flex;
+}

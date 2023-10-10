@@ -15,13 +15,15 @@ const postVG = async (body) =>{
         //id,
         name,
         description,
-        platforms,
+        //platforms,
         image,
         released,
         rating,
         origin: 'DB'
     })
+
     newGame.addGenre(genres)
+    newGame.addPlataform(platforms)
     return newGame
 }
 
