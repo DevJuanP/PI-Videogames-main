@@ -1,4 +1,4 @@
-import { GET_VG, GET_GENRES, GET_PLATFORMS, PAGINATE, GO_TO_PAGE, FILTER, ORDER, SEARCH, GET_DETAIL, CLEAR_DETAIL } from './actions-types'
+import { GET_VG, GET_GENRES, GET_PLATFORMS, PAGINATE, GO_TO_PAGE, FILTER, ORDER, SEARCH, GET_DETAIL, CLEAR_DETAIL, CLEAR_ALL_VG } from './actions-types'
 
 const initialState = {
     VGtoShow: [],
@@ -9,7 +9,8 @@ const initialState = {
     VGtoShowCount: 0,//modificado
     VGfiltered: [],//nuevo
     filterCriteria: [],
-    detail: {}
+    detail: {},
+    fromDetail: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -17,16 +18,16 @@ const reducer = (state = initialState, action) => {
     let startIndex = 0
     switch (action.type){
         case GET_VG:
-            const VGShow = state.VGfiltered.length == 0
-            ? action.payload.slice((state.currentPage-1)*cardsPerPage, state.currentPage*cardsPerPage)
-            : state.VGfiltered.slice((state.currentPage-1)*cardsPerPage, state.currentPage*cardsPerPage)
+            if(state.fromDetail) return{...state, fromDetail: false}
+            const VGShow = action.payload.slice((state.currentPage-1)*cardsPerPage, state.currentPage*cardsPerPage)
 
             return {
                 ...state,
                 allVG: action.payload,
                 VGtoShow: VGShow,
-                VGtoShowCount: state.VGfiltered.length == 0? action.payload.length: state.VGfiltered.length,
-                VGfiltered: state.VGfiltered.length == 0? action.payload: state.VGfiltered,
+                VGtoShowCount: action.payload.length,
+                VGfiltered:  action.payload,
+                filterCriteria: []
             }
         case GET_GENRES:
             return{
@@ -63,19 +64,26 @@ const reducer = (state = initialState, action) => {
                 VGtoShow: state.VGfiltered.slice(startIndex, startIndex + cardsPerPage)
             }
         case FILTER:
-            console.log(action.payload);
-            const currentFilterCriteria = action.payload[0] !== '*'
-            ? [...state.filterCriteria, action.payload]
-            : state.filterCriteria.filter( c => c !== action.payload.slice(1))
+            let currentFilterCriteria = []
+            if(action.payload[0] !== '*'){
+                if(state.filterCriteria.includes(action.payload)){
+                    currentFilterCriteria = [...state.filterCriteria]
+                }else{
+                    currentFilterCriteria = [...state.filterCriteria, action.payload]
+                }
+            }else{
+                currentFilterCriteria = state.filterCriteria.filter( c => c !== action.payload.slice(1))
+            }
 
             let filtered =[...state.allVG]
-
+        
             currentFilterCriteria.forEach( c => {
                 let searchLocation = 'origin'
                 if(state.platforms.includes(c)) searchLocation = 'platforms'
                 if(state.genres.includes(c)) searchLocation = 'genres'
 
                 filtered = filtered.filter( vg =>{
+                    if (!Array.isArray(vg.platforms)) return false
                     return searchLocation === 'origin'
                     ? vg.origin === c
                     : vg[searchLocation].includes(c)
@@ -138,7 +146,19 @@ const reducer = (state = initialState, action) => {
         case CLEAR_DETAIL:
             return{
                 ...state,
-                detail: []
+                detail: {},
+                //filterCriteria: []
+                fromDetail: true
+            }
+
+        case CLEAR_ALL_VG:
+            console.log('clear all');
+            return{
+                ...state,
+                VGtoShow: [],
+                allVG: [],
+                VGfiltered: [],
+                filterCriteria: []
             }
 
         default:

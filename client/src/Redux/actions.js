@@ -1,4 +1,4 @@
-import {GET_VG, GET_GENRES, GET_PLATFORMS, PAGINATE, GO_TO_PAGE, FILTER, ORDER, SEARCH, GET_DETAIL, CLEAR_DETAIL } from './actions-types'
+import {GET_VG, GET_GENRES, GET_PLATFORMS, PAGINATE, GO_TO_PAGE, FILTER, ORDER, SEARCH, GET_DETAIL, CLEAR_DETAIL, CLEAR_ALL_VG } from './actions-types'
 import axios from 'axios'
 const API = 'http://localhost:3001'//back
 
@@ -113,6 +113,16 @@ export const clearDetail = () => {
     return async (dispatch) => {
         try {
             return dispatch({ type: CLEAR_DETAIL, payload: [] })
+        } catch (error) {
+            alert(error.response.data.error)
+        }
+    }
+}
+
+export const clearAllVG = () => {
+    return async (dispatch) => {
+        try {
+            return dispatch({ type: CLEAR_ALL_VG, payload: 'clear' })
         } catch (error) {
             alert(error.response.data.error)
         }

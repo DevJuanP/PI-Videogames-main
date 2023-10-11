@@ -1,15 +1,17 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import logo from '../../assets/logo VG_4.svg'
 import './NavBar.css'
 import '../../Views/PostForm/PostForm'
-import { useDispatch } from 'react-redux'
-import { search } from '../../Redux/actions'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllVG, search } from '../../Redux/actions'
 
 const NavBar = () => {
 
-  //const [toSearch, setToSearch] = useState([])
   const dispatch = useDispatch()
+  const VGtoShowCount = useSelector( state => state.VGtoShowCount)
+  const path = useLocation()
+
   const handleSearch = () => {
     const toSearch = document.getElementById('search').value
     dispatch(search(toSearch))
@@ -18,6 +20,7 @@ const NavBar = () => {
 
   return (
       <div className='NavBar'>
+        
         <div className='superior'>{/*logo, search, fav y form*/}
           <div className='logo'>
           <NavLink to={'/'}><img src={logo} alt="logo" /></NavLink>
@@ -36,6 +39,7 @@ const NavBar = () => {
 
         <div className='links'>
           <NavLink to={'/home'}><button>Home</button></NavLink>
+          <button onClick={() => dispatch(getAllVG())} disabled={VGtoShowCount === 100}>ALL VIDEOGAMES</button>
           <NavLink to={'/about'}><button>About</button></NavLink>
         </div>
         

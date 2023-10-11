@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './PostForm.css'
-import { getAllGenres, getAllPlatforms, postVG } from '../../Redux/actions'
+import { getAllGenres, getAllPlatforms, postVG, clearAllVG } from '../../Redux/actions'
 import { useDispatch, useSelector } from 'react-redux'
+
 
 
 const PostForm = () => {
@@ -9,7 +10,10 @@ const PostForm = () => {
   const dispatch = useDispatch() 
   const platforms = useSelector(state => state.platforms)
   const genres = useSelector(state => state.genres)
-  
+  const allVG = useSelector( state => state.allVG )
+  const allnames = allVG.map( vg => vg.name)
+  const url = 'https://images.pexels.com/photos/1670977/pexels-photo-1670977.jpeg?'
+  const currentDate = new Date();
   
   const [state, setState] = useState({
     name: '',
@@ -32,67 +36,46 @@ const PostForm = () => {
   })
 
   useEffect(() => {
-    //console.log('mount');
+    
     dispatch(getAllGenres())
     dispatch(getAllPlatforms())
   
     return () => {
-      //console.log('unmount');
+      dispatch(clearAllVG())
+      
     };
   },[])
   
   const validate = (state, name) => {
     switch(name){
       case `name`:
-        state.name === ''? setErrors({
-          ...errors,
-          name: 'campo requerido* '
-        }) : setErrors({
-          ...errors,
-          name: ''
-        })
-        break;
-
+        if(state.name === "") setErrors({...errors, name: 'campo requerido*'})
+        else if(state.name.length<4 || state.name.length>20) setErrors({...errors, name: 'el nombre debe tener entre 3 y 20 caracteres'})
+        else if(!/^[a-zA-Z0-9\-": ]+$/.test(state.name)) setErrors({...errors, name: 'solo usar simbolos alfanuméricos, "", - y :'})
+        else if(allnames.includes(state.name)) setErrors({...errors, name: 'este nombre ya existe'})
+        else setErrors({...errors, name: ''}); break
+      
       case `description`:
-        state.description === ''? setErrors({
-          ...errors,
-          description: 'campo requerido* '
-        }) : setErrors({
-          ...errors,
-          description: ''
-        })
-        break;
+        if(state.description === "") setErrors({...errors, description: 'campo requerido*'})
+        else if(state.description.length<16 || state.description.length>300) setErrors({...errors, description: 'el nombre debe tener entre 15 y 300 caracteres'})
+        else if(!/^[a-zA-Z0-9\-": ]+$/.test(state.description)) setErrors({...errors, description: 'solo usar simbolos alfanuméricos, "", - y :'})
+        else setErrors({...errors, description: ''}); break
 
       case 'image':
-        //console.log(name);
-        state.image === ''? setErrors({
-          ...errors,
-          image: 'campo requerido* '
-        }) : setErrors({
-          ...errors,
-          image: ''
-        })
-        break;
+        if(state.image === "") setErrors({...errors, image: 'campo requerido*'})
+        else if(!/^(https?|ftp):\/\/\S+$/.test(state.image)) setErrors({...errors, image: 'La URL de la imagen no es válida.'})
+        else setErrors({...errors, image: ''}); break
 
       case `released`:
-        state.released === ''? setErrors({
-          ...errors,
-          released: 'campo requerido* '
-        }) : setErrors({
-          ...errors,
-          released: ''
-        })
-        break;
+        if(state.released === "") setErrors({...errors, released: 'campo requerido*'})
+        else if(!/^\d{4}-\d{2}-\d{2}$/.test(state.released)) setErrors({...errors, released: 'El formato de fecha debe ser yyyy-mm-dd'})
+        else if((new Date(state.released))> currentDate) setErrors({...errors, released: 'No se permiten fechas futuras.'})
+        else setErrors({...errors, released: ''}); break
 
       case `rating`:
-        state.rating === ''? setErrors({
-          ...errors,
-          rating: 'campo requerido* '
-        }) : setErrors({
-          ...errors,
-          rating: ''
-        })
-        break;
+        if(state.rating === "") setErrors({...errors, rating: 'campo requerido*'})
+        else if(!/^(?:[0-5](?:\.\d{1,2})?)$/.test(state.rating)) setErrors({...errors, rating: 'debe ser un número entre 0 y 5 con 2 decimales'})
+        else setErrors({...errors, rating: ''}); break
 
       case 'genres':
         state.genres.length === 0
@@ -152,6 +135,19 @@ const PostForm = () => {
         },'genres')
         break;
 
+      case 'imageDefault':
+        const imgInput = document.getElementById('image')
+        imgInput.value = url
+        setState({
+          ...state,
+          image: url
+        })
+        validate({
+          ...state,
+          image: url
+        }, 'image')
+        break;
+
       default:
         setState({ 
           ...state,
@@ -193,54 +189,81 @@ const PostForm = () => {
       genres: state.genres.map( g => genres.indexOf(g)+1),
       platforms: state.platforms.map( p => platforms.indexOf(p)+1)
     }))
-    console.log(state);
   }
 
   return (
     <div className='PostForm' onSubmit={handleSubmit}>
-      {/* {console.log(state)} */}
-       <form action="">
-        <span>{errors.name}</span>
-        <label htmlFor="name">Name:</label>
-        <input onChange={handleChange} type="text" name='name'id='name'/><br /><br />
+      <h2>Crea un Videojuego</h2>
 
-        <span>{errors.description}</span>
-        <label htmlFor="description">Description:</label>
-        <textarea onChange={handleChange} name="description" id="description" cols="25" rows="5"></textarea><br /><br />
-        
-        <div>
-        <span>{errors.platforms}</span>
-          <label htmlFor="platforms">Plataformas: </label>
-          <select name="platforms" id="platforms">
-            {platforms.map((p, i) => <option key={`${i}`} value={p}>{p}</option>)}
-          </select>
-          <button type='button' onClick={handleChange} name='addP'>➕</button><br /><br />
-        </div> 
-
-        <span>{errors.image}</span>
-        <label htmlFor="image"> Imagen: </label>
-        <input onChange={handleChange} type="text" name='image' id='image'/><br /><br />
-
-        <span>{errors.released}</span>
-        <label htmlFor="released">Lanzamiento: </label>
-        <input onChange={handleChange} type="date" name='released' id='released' pattern="\d{4}-\d{2}-\d{2}"/><br /><br />
-
-        <span>{errors.rating}</span>
-        <label htmlFor="rating">Rating: </label>
-        <input onChange={handleChange} type="number" name='rating' id='rating' step="0.01" min="0" placeholder="0.00"/><br /><br />
-
-        <div>
-        <span>{errors.genres}</span>
-          <label htmlFor="genres">Generos: </label>
-          <select name="genres" id="genres">
-            {genres.map( (g, i) => <option key={`${i}`} value={g}>{g}</option>)}
-          </select>
-          <button type='button' onClick={handleChange} name='addG'>➕</button><br /><br />
+      <div className='FormView'>
+        <form className='form' action="">
+        <div className='campo'>
+          <span>{errors.name}</span>
+          <div className='colum'>
+            <label htmlFor="name">Name:</label>
+            <input onChange={handleChange} type="text" name='name'id='name'/><br /><br />
+          </div>
         </div>
-        <button type='submit' disabled={disableHandler()}>Crear</button>
-       </form>
 
-       <div>
+        <div className='campo'>
+          <span>{errors.description}</span>
+          <div className='colum'>
+            <label htmlFor="description">Description:</label>
+            <textarea onChange={handleChange} name="description" id="description" cols="50" rows="3"></textarea><br /><br />
+          </div>
+        </div>
+
+        <div className='campo'>
+          <span>{errors.platforms}</span>
+          <div className='colum'>
+            <label htmlFor="platforms">Plataformas: </label>
+            <select name="platforms" id="platforms">
+              {platforms.map((p, i) => <option key={`${i}`} value={p}>{p}</option>)}
+            </select>
+            <button type='button' onClick={handleChange} name='addP'>add➕</button><br /><br />
+          </div>
+        </div>
+
+        <div className='campo'>
+          <span>{errors.image}</span>
+          <div className='colum'>
+            <label htmlFor="image"> Imagen: </label>
+            <input onChange={handleChange} type="text" name='image' id='image'/>
+            <button type='button' name='imageDefault' onClick={handleChange}>img by default</button><br /><br />
+          </div>
+        </div>
+
+        <div className='campo'>
+          <span className='error'>{errors.released}</span>
+          <div className='colum'>
+            <label htmlFor="released">Lanzamiento: </label>
+            <input onChange={handleChange} type="date" name='released' id='released' pattern="\d{4}-\d{2}-\d{2}"/><br /><br />
+          </div>
+        </div>
+
+        <div className='campo'>
+          <span>{errors.rating}</span>
+          <div className='colum'>
+            <label htmlFor="rating">Rating: </label>
+            <input onChange={handleChange} type="number" name='rating' id='rating' step="0.01" min="0" placeholder="0.00"/><br /><br />
+          </div>
+        </div>
+
+        <div className='campo'>
+          <span>{errors.genres}</span>
+          <div className='colum'>
+            <label htmlFor="genres">Generos: </label>
+            <select name="genres" id="genres">
+              {genres.map( (g, i) => <option key={`${i}`} value={g}>{g}</option>)}
+            </select>
+            <button type='button' onClick={handleChange} name='addG'>add➕</button><br /><br />
+          </div>
+        </div>
+        
+        <button type='submit' disabled={disableHandler()}>Crear</button>
+        </form>
+
+        <div>
         <h3>*previsualización-despegable*</h3>
         <div>
         <span>Plataformas:</span>
@@ -260,7 +283,8 @@ const PostForm = () => {
             </div>)
           }
         </div>
-       </div>
+        </div>
+      </div>
 
     </div>
   )

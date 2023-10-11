@@ -24,7 +24,7 @@ const Landing = () => {
 
 
   useEffect(() => {
-    console.log('MOUNTED');
+    
     dispatch(getAllVG())
     setInterval(ChangeBG, 3000)
     return () => {}

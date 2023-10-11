@@ -4,18 +4,22 @@ import CardList from '../../Components/CardList/CardList'
 import logob from '../../assets/logo VG_3.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllVG, getAllGenres, getAllPlatforms, paginateVG, goToPageVG, filter, order } from '../../Redux/actions'
+import loading from '../../assets/loading.gif'
 
 const Home = () => {
   // change: numberOfVG
   const dispatch = useDispatch()
-  //const allVG = useSelector( state => state.allVG)
-  //const VGtoShow = useSelector( state => state.VGtoShow)
   const VGtoShowCount = useSelector( state => state.VGtoShowCount )
   const currentPage = useSelector( state => state.currentPage )
   const platforms = useSelector( state => state.platforms )
   const genres = useSelector( state => state.genres )
   const filterCriteria = useSelector( state => state.filterCriteria )
   const cardsPerPage = 15
+  const allVG = useSelector( state => state.allVG )
+  const VGfiltered = useSelector( state => state.VGfiltered )
+
+  const isLoading = !allVG || allVG.length === 0;
+  const noVG = allVG.length && VGfiltered.length === 0
 
   const numberOfpages = Math.ceil(VGtoShowCount/cardsPerPage)
   const pages = Array(numberOfpages).fill(1)
@@ -27,7 +31,6 @@ const Home = () => {
    dispatch(getAllPlatforms())
  
    return () => {
-     
    }
   }, [])
 
@@ -80,75 +83,83 @@ const Home = () => {
 
   return (
     <div className='home'>
-      <div className='image'>
-        <img src={logob} alt="logo" />
-      </div>
+          <div className='image'>
+            <img src={logob} alt="logo" />
+          </div>
+      {
+        isLoading
+        ? (<img className='loading' src={loading}></img>)
+        :<>
 
-      <div className='FilterOrder'>
-        <div className='filter'>
-          <div className='enLinea'>
-            <span>filter by platforms</span><br />{/*borrar name ↓↓↓*/}
-            <select name="platforms" id="platforms" onChange={handleFilter} defaultValue="default">
-              <option value="default" disabled>Selecciona una opción</option>
-              {platforms.map((p, i) => <option key={`${i}`} value={p} >{p}</option>)}
-            </select>
+          <div className='FilterOrder'>
+            <div className='filter'>
+              <div className='enLinea'>
+                <span>filter by platforms</span><br />{/*borrar name ↓↓↓*/}
+                <select name="platforms" id="platforms" onChange={handleFilter} defaultValue="default">
+                  <option value="default" disabled>Selecciona una opción</option>
+                  {platforms.map((p, i) => <option key={`${i}`} value={p} >{p}</option>)}
+                </select>
+              </div>
+
+              <div className='enLinea'>
+                <span>filter by genres</span><br />
+                <select name="genres" id="genres" onChange={handleFilter} defaultValue="default">
+                  <option value="default" disabled>Selecciona una opción</option>
+                  {genres.map( (g, i) => <option key={`${i}`} value={g} >{g}</option>)}
+                </select>
+              </div>
+
+              <div className='enLinea'>
+                <span>filter by origin</span><br />
+                <select name="origin" id="origin" onChange={handleFilter} defaultValue="default">
+                  <option value="default" disabled>Selecciona una opción</option>
+                  <option value="DB">DB</option>
+                  <option value="API">API</option>
+                </select>
+              </div>
+
+              <div>
+                {filterCriteria.map((c, i) => <button id='remove' onClick={handleFilter} key={i} value={`*${c}`}>{`${c} ✖`}</button>)}
+              </div>
+            </div>
+
+            <div className='order'>
+              <div className='enLinea'>
+                <span>order by name</span><br />
+                <select  onChange={handleOrder} defaultValue="default" id='nameOder'>
+                  <option value="default" disabled>Selecciona una opción</option>
+                  <option value="AZ">A → Z</option>
+                  <option value="ZA">Z → A</option>
+                </select>
+              </div>
+
+              <div className='enLinea'>
+                <span>order by rating</span><br />
+                <select  onChange={handleOrder} defaultValue="default" id='ratingOrder'>
+                  <option value="default" disabled>Selecciona una opción</option>
+                  <option value="asc">Menor rating</option>
+                  <option value="des">Mayor rating</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div className='enLinea'>
-            <span>filter by genres</span><br />
-            <select name="genres" id="genres" onChange={handleFilter} defaultValue="default">
-              <option value="default" disabled>Selecciona una opción</option>
-              {genres.map( (g, i) => <option key={`${i}`} value={g} >{g}</option>)}
-            </select>
+          <div className='buttons'>
+              <button name='prev' onClick={paginate} className='pag'>⬅</button>
+              {
+                pages.map( (e, i) => {
+                  return(
+                    <button className={(i+1)==currentPage? 'button-outline': null} key={i} id={i+1} onClick={goToPage}>{i+1}</button>
+                  )
+                })
+              }
+              <button name='next' onClick={paginate} className='pag'>➡</button>
           </div>
-
-          <div className='enLinea'>
-            <span>filter by origin</span><br />
-            <select name="origin" id="origin" onChange={handleFilter} defaultValue="default">
-              <option value="default" disabled>Selecciona una opción</option>
-              <option value="DB">DB</option>
-              <option value="API">API</option>
-            </select>
-          </div>
-
-          <div>
-            {filterCriteria.map((c, i) => <button id='remove' onClick={handleFilter} key={i} value={`*${c}`}>{`${c} ✖`}</button>)}
-          </div>
-        </div>
-
-        <div className='order'>
-          <div className='enLinea'>
-            <span>order by name</span><br />
-            <select  onChange={handleOrder} defaultValue="default" id='nameOder'>
-              <option value="default" disabled>Selecciona una opción</option>
-              <option value="AZ">A → Z</option>
-              <option value="ZA">Z → A</option>
-            </select>
-          </div>
-
-          <div className='enLinea'>
-            <span>order by rating</span><br />
-            <select  onChange={handleOrder} defaultValue="default" id='ratingOrder'>
-              <option value="default" disabled>Selecciona una opción</option>
-              <option value="asc">Menor rating</option>
-              <option value="des">Mayor rating</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div className='buttons'>
-          <button name='prev' onClick={paginate} className='pag'>⬅</button>
-          {
-            pages.map( (e, i) => {
-              return(
-                <button className={(i+1)==currentPage? 'button-outline': null} key={i} id={i+1} onClick={goToPage}>{i+1}</button>
-              )
-            })
-          }
-          <button name='next' onClick={paginate} className='pag'>➡</button>
-      </div>
-
+        </>
+      }
+      {
+        noVG? (<h2>No hay videojuegos con esta combinación de filtros.</h2>) : null
+      }
       <CardList />
 
     </div>

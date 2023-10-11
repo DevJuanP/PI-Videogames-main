@@ -1,11 +1,55 @@
 .PostForm{
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, 0);
-    margin-top: 200px;
+    margin-top: 180px;
     color: white;
     display: flex;
-    justify-content: center;
+    align-items: center;
     flex-direction: column;
+    justify-content: space-around;
 }
+
+.FormView{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 90%;
+}
+
+.PostForm h2{
+    display: inline;
+    margin: 10px;
+    font-size:xx-large;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(114, 111, 111);
+    border-radius: 20px;
+    margin: 5px;
+    padding: 10px;
+}
+
+.form span{
+    color: brown;
+}
+
+.colum{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.error{
+    display: block;
+}
+
+.campo{
+    border: 1px solid rgb(114, 111, 111);
+    border-radius: 20px;
+    margin: 5px;
+    padding: 8px;
+}
+
+

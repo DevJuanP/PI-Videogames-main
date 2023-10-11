@@ -15,7 +15,6 @@ function App() {
   const path = useLocation()
   return (
     <>
-
       {path.pathname==='/'? null:<NavBar />}
       <Routes>
         <Route 

@@ -16,7 +16,7 @@ module.exports = (sequelize) => {
       unique: true
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     }, 
     // platforms: {
@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
     //   defaultValue: ['PC']
     // },
     image: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       defaultValue: 'https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg'
     },

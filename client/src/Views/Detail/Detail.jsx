@@ -3,7 +3,7 @@ import './Detail.css'
 import { useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { getDetail, clearDetail } from '../../Redux/actions'
- import loading from '../../assets/loading.gif'
+import loading from '../../assets/loading.gif'
 
 const Detail = () => {
 

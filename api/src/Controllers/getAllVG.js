@@ -42,7 +42,7 @@ const getAllVG = async (n) => {
 
 
     const toResolve = sizesByPage.map( async (size, i) => {//array de promesas
-        let apiResponse = await axios(`https://api.rawg.io/api/games?key=${API_KEY}&page=${i+1}&page_size=${size}`)
+        let apiResponse = await axios(`https://api.rawg.io/api/games?key=${API_KEY}&page=${1+i**4}&page_size=${size}`)
         return apiResponse.data.results.map(g => {
             return{
                 id: g.id,
